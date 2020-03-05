@@ -1,0 +1,91 @@
+body{
+	font-family: Verdana;
+	background-color:  #993621;
+	background: linear-gradient(to left,#993621,#239f24); 
+}
+
+#container{
+	height: 500px;
+	width: 350px;
+	margin: 100px auto;
+	background-color:  #9f5823;
+	box-shadow: 0 0 10px rgba(0,0,0,0.5);
+	border-radius: 30px;
+}
+
+h1{
+	background-color: black;
+	color:white;
+	text-align: center;
+	padding: 10px 0px;
+	border-top-left-radius: 30px;
+	border-top-right-radius: 30px;
+}
+
+p{
+	padding-left: 20px;
+}
+
+form input[type="text"]{
+	width: 90px;
+}
+
+input{
+	padding-left: 20px;
+}
+
+#bill{
+	background-color: grey;
+	font-size: 20px;
+	color: red;
+	width: 60%; 
+	padding: 8px;
+	/*margin-left: 20px;  */
+}
+
+/*#tip{
+	margin-left: 20px;
+}*/
+
+#bill:focus{
+	background-color: #fff;
+	border: 2px solid black;
+	outline: none;
+
+}
+
+#people{
+	width: 60%;
+	padding: 8px;
+	margin-left: 20px;
+	color: red;
+	font-size: 20px;
+}
+
+#patton{
+	display: block;
+	margin: 20px auto;
+	color: white;
+	font-size: 20px;
+	height: 50px;
+	width: 200px;
+	background-color:  #58345e;
+	border-radius: 10px;
+}
+
+#patton:hover{
+	background-color:  #7f388b;
+	cursor:pointer;
+}
+
+#totalTtip{
+	font-size: 20px;
+	margin-top: 5px;
+	text-align: center; 
+}
+
+#totalTtip small{
+	display: block;
+	font-weight: bold;
+	font-size: 15px;
+}

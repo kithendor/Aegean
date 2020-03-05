@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="tsiki.css">
+</head>
+<body>
+	<div id="container">
+		<h1>the bill</h1>
+		<div id="calculator">
+			<form>
+				<p>Πόσο κόστιζει το τραπέζι;</p>
+				<input type="text" id="bill" placeholder="κόστος">
+				<p>Πόσο tip θα δώσετε</p>
+				<select id="tip">
+					<option disabled="false" selected >-- Επιλέξτε Tip --</option>
+					<option>30%</option>
+					<option>20%</option>
+					<option>15%</option>
+					<option>5%</option>
+				</select>
+			</form>
+			<p>Πόσοι θα πληρώσετε;</p>
+			<input type="text" id="people" placeholder="Αριθμός ατόμων">
+
+			<input id="patton" type="button" value="Υπολογισμός">
+		</div> 
+		<!--telos calculator -->
+
+		<div id="totalTtip">
+			<span>0.00 €</span>
+			<small>ο κάθε ένας</small>
+		</div>
+		<!--telos totalTtip -->
+	</div>
+	<!--telos container -->
+	<script type="text/javascript" src="tsiki.js"></script>
+</body>
+</html>
