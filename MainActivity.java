@@ -1,128 +1,111 @@
-package com.app.kitsos.tikitaki;
+package com.example.testakitsakifirebase;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class MainActivity extends AppCompatActivity {
-
-    ImageView im;
-    LinearLayout ln;
-    TableLayout tl;
-    TextView wintxt;
-    int activeplayer = 0; //0=yellow, 1=red
-    boolean activegame = true;
-
-    int gameState[] = {2,2,2,2,2,2,2,2,2}; //2 = keni eikona
-    int winsit[][] = {{0,1,2},{3,4,5},{6,7,8},{0,4,8},{2,4,6},{0,3,6},{2,5,8},{1,4,7}};
+    EditText nametxt,agetxt,mailtxt,passwordtxt;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ln = findViewById(R.id.panel);
-        ln.setVisibility(View.INVISIBLE);
-        tl = findViewById(R.id.tablelo);
-        wintxt = findViewById(R.id.textView);
+        mAuth = FirebaseAuth.getInstance();
+
+        nametxt = findViewById(R.id.nametxt);
+        agetxt = findViewById(R.id.agetxt);
+        mailtxt = findViewById(R.id.mailtxt);
+        passwordtxt = findViewById(R.id.passwordtxt);
     }
 
-    public void addtile(View v)
-    {
-        im = (ImageView) v;
+    public void registerUser(View v) {
+        String name = nametxt.getText().toString().trim();
+        String age = agetxt.getText().toString().trim();
+        String mail = mailtxt.getText().toString().trim();
+        String password = passwordtxt.getText().toString().trim();
 
-        int tap = Integer.parseInt(im.getTag().toString()); //System.out.println(im.getTag().toString());
+        if (name.isEmpty()) {
+            nametxt.setError("Fill your name");
+            nametxt.requestFocus();
+            return;
+        }
 
-        if(gameState[tap]==2 && activegame)
-        {
-            gameState[tap] = activeplayer;
-            im.setTranslationY(-200f);
-            if(activeplayer==0)
-            {
-                im.setImageResource(R.drawable.yellow);
-                activeplayer = 1;
-            }
-            else
-            {
-                im.setImageResource(R.drawable.red);
-                activeplayer = 0;
-            }
+        if (age.isEmpty()) {
+            agetxt.setError("Fill your age");
+            agetxt.requestFocus();
+            return;
+        }
 
-            im.animate().translationYBy(200f).rotation(300).setDuration(500);
+        if (mail.isEmpty()) {
+            mailtxt.setError("Fill your mailtxt");
+            mailtxt.requestFocus();
+            return;
+        }
 
-            for (int i[] : winsit) {
-                if (gameState[i[0]] == gameState[i[1]] && gameState[i[1]] == gameState[i[2]] &&
-                        gameState[i[0]] != 2) {
-                    wingame(1);
-                }
-                else
-                {
-                    boolean over = true;
+        if (password.isEmpty()) {
+            passwordtxt.setError("Fill your mailtxt");
+            passwordtxt.requestFocus();
+            return;
+        }
 
-                    for(int z:gameState)
-                    {
-                        if(z==2){
-                            over = false;
+        if (!Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
+            mailtxt.setError("Valid mailxt");
+            mailtxt.requestFocus();
+            return;
+        }
+
+
+        mAuth.createUserWithEmailAndPassword(mail,password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if(task.isSuccessful()){
+                            User user = new User(name,age,mail);
+
+                            FirebaseDatabase.getInstance().getReference("Users")
+                                    .child(mAuth.getCurrentUser().getUid())
+                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(MainActivity.this, "ok", Toast.LENGTH_SHORT).show();
+                                    }else{
+                                        Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }else{
+                            Toast.makeText(MainActivity.this, "Error 2", Toast.LENGTH_SHORT).show();
+
                         }
                     }
-
-                    if(over){
-                        wingame(0);
-                    }
-                }
-            }
-        }
-
+                });
     }
 
-    private void wingame(int x)
-    {
-        if(x==0)
-        {
-            wintxt.setText("isopalia");
-        }
-        else
-        {
-            String winner;
-            if(activeplayer==0)
-                winner = "Red";
-            else
-                winner = "Yellow";
-            wintxt.setText(winner);
-        }
-
-
-
-        ln.setVisibility(View.VISIBLE);
-        activegame = false;
+    public void giavale(View v){
+        FirebaseDatabase.getInstance().getReference("Test")
+                .child("markos")
+                .setValue("Aleksis");
     }
 
-    public void resetgame(View v)
-    {
-        ln.setVisibility(View.INVISIBLE);
-        activeplayer = 0;
-        activegame = true;
-        for(int i=0;i<gameState.length;i++)
-        {
-            gameState[i]=2;
-        }
-
-        for(int i=0;i<3;i++)
-        {
-            TableRow row = (TableRow)tl.getChildAt(i);
-            for(int j=0;j<3;j++)
-            {
-                ((ImageView)row.getChildAt(j)).setImageResource(0);
-            }
-        }
+    public void goToLogin(View v){
+        Intent intent = new Intent(MainActivity.this,LoginAct.class);
+        startActivity(intent);
     }
-
-
 }
